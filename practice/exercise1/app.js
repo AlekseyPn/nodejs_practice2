@@ -16,7 +16,7 @@ performanceObserver.observe({
 
 
 const workerFunction = (nums) => {
-    performance.mark('start');
+    performance.mark('work start');
     return new Promise((resolve) => {
         const worker = new Worker('./worker.js', {
             workerData: {
@@ -26,22 +26,22 @@ const workerFunction = (nums) => {
 
         worker.on('message', (data) => {
             console.log(data)
+            performance.mark('work end');
+            performance.measure('worker', 'work start', 'work end');
             resolve(data);
-            performance.mark('end');
-            performance.measure('worker', 'start', 'end');
         })
     })
 }
 
 const forkFunction = (array) => {
-    performance.mark('start');
+    performance.mark('fork start');
     return new Promise((resolve) => {
         const forkProcess = fork('./fork.js');
         forkProcess.on('message', (data) => {
             console.log(data)
+            performance.mark('fork end');
+            performance.measure('fork', 'fork start', 'fork end');
             resolve(data);
-            performance.mark('end');
-            performance.measure('fork', 'start', 'end');
         })
 
         forkProcess.send(array);
