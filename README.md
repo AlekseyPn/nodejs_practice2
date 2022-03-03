@@ -1,1 +1,1 @@
-# nodejs_practice2
+# Weather CLI

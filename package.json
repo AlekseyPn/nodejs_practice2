@@ -1,11 +1,14 @@
 {
-  "name": "weather",
+  "name": "fargo-weather-cli",
   "version": "1.0.0",
   "description": "CLI For getting weather",
-  "main": "index.js",
-  "bin": "./index.js",
+  "main": "weather.js",
+  "bin": {
+    "weather": "weather.js"
+  },
+  "type": "module",
   "scripts": {
-    "start": "node index.js",
+    "start": "node weather.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -20,5 +23,10 @@
   },
   "bugs": {
     "url": "https://github.com/AlekseyPn/nodejs_practice2"
+  },
+  "dependencies": {
+    "axios": "^0.25.0",
+    "chalk": "^5.0.0",
+    "dedent-js": "^1.0.1"
   }
 }
