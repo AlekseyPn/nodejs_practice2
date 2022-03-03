@@ -21,7 +21,6 @@ const getIcon = (icon) => {
       return '❄️';
     case '50':
       return '🌫️';
-
   }
 }
 

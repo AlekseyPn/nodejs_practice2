@@ -22,11 +22,11 @@ const printHelp = () => {
 const printWeather = (weather, icon) => {
   console.log(dedent(`
     ${chalk.bgBlue(' WEATHER ')} Weather in city ${weather.name}
-      ${icon}  ${weather.weather[0].description}
-      Temp: ${parseInt(weather.main.temp)}C°
-      Feels Like: ${parseInt(weather.main.feels_like)}C°
-      humidity: ${parseInt(weather.main.humidity)}%
-      Wind Speed: ${weather.wind.speed} m/s
+    ${icon}  ${weather.weather[0].description}
+    Temp: ${parseInt(weather.main.temp)}C°
+    Feels Like: ${parseInt(weather.main.feels_like)}C°
+    humidity: ${parseInt(weather.main.humidity)}%
+    Wind Speed: ${weather.wind.speed} m/s
    `))
 }
 
