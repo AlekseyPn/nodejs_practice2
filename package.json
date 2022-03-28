@@ -1,16 +1,16 @@
 {
-  "name": "weather",
+  "name": "dashboard-api",
   "version": "1.0.0",
-  "description": "CLI For getting weather",
+  "description": "Dashboard API",
   "main": "index.js",
-  "bin": "./index.js",
+  "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "keywords": [
-    "cli",
-    "weather"
+    "api",
+    "dashboard"
   ],
   "author": "Aleks Fers",
   "license": "ISC",
@@ -20,5 +20,8 @@
   },
   "bugs": {
     "url": "https://github.com/AlekseyPn/nodejs_practice2"
+  },
+  "dependencies": {
+    "express": "^4.17.3"
   }
 }
