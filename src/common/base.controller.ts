@@ -14,12 +14,12 @@ export abstract class BaseController {
     }
 
     public created(res: Response) {
-        return res.sendStatus(201);
+        return res.status(201);
     }
 
     public send<T>(res: Response, code: number, message: T) {
         res.contentType('application/json')
-        return res.sendStatus(code).json(message);
+        return res.status(code).json(message);
     }
 
     public ok<T>(res:Response, message: T) {
