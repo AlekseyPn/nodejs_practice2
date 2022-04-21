@@ -25,11 +25,11 @@ export class UsersController extends BaseController implements IUserController {
 		]);
 	}
 
-	public login(req: Request, res: Response, next: NextFunction) {
-		return next(new HttpError(401, 'Unauthorized', 'login'));
+	public login(req: Request, res: Response, next: NextFunction): void {
+		next(new HttpError(401, 'Unauthorized', 'login'));
 	}
 
-	public register(req: Request, res: Response, next: NextFunction) {
-		return this.ok(res, 'register');
+	public register(req: Request, res: Response, next: NextFunction): void {
+		this.ok(res, 'register');
 	}
 }
