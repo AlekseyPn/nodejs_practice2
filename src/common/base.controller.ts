@@ -3,9 +3,10 @@ import {IControllerRoute} from "./route.interface";
 import {ILoggerService} from "../logger/logger.interface";
 import {injectable} from "inversify";
 import 'reflect-metadata';
+import {IBaseController} from "./base.controller.interface";
 
 @injectable()
-export abstract class BaseController {
+export abstract class BaseController implements IBaseController {
     private readonly _router: Router;
 
     constructor(private logger: ILoggerService) {
@@ -17,16 +18,16 @@ export abstract class BaseController {
     }
 
     public created(res: Response) {
-        return res.status(201);
+        res.status(201);
     }
 
     public send<T>(res: Response, code: number, message: T) {
         res.contentType('application/json')
-        return res.status(code).json(message);
+        res.status(code).json(message);
     }
 
     public ok<T>(res:Response, message: T) {
-        return this.send<T>(res, 200, message);
+        this.send<T>(res, 200, message);
     }
 
     protected bindRoutes(routes: IControllerRoute[]) {
