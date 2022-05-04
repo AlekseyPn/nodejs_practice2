@@ -6,10 +6,13 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../types';
 import 'reflect-metadata';
 import { IUserController } from './users.controller.interface';
+import { UserLoginDto } from './dto/user-login.dto';
+import { UserRegisterDto } from './dto/user-register.dto';
+import { IUsersService } from './user.service.interface';
 
 @injectable()
 export class UsersController extends BaseController implements IUserController {
-	constructor(@inject(TYPES.ILoggerService) private loggerService: ILoggerService) {
+	constructor(@inject(TYPES.ILoggerService) private loggerService: ILoggerService, @inject(TYPES.IUsersService) private userService: IUsersService) {
 		super(loggerService);
 		this.bindRoutes([
 			{
@@ -25,11 +28,16 @@ export class UsersController extends BaseController implements IUserController {
 		]);
 	}
 
-	public login(req: Request, res: Response, next: NextFunction): void {
+	public login(req: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction): void {
 		next(new HttpError(401, 'Unauthorized', 'login'));
 	}
 
-	public register(req: Request, res: Response, next: NextFunction): void {
-		this.ok(res, 'register');
+	public async register({ body }: Request<{}, {}, UserRegisterDto>, res: Response, next: NextFunction): Promise<void> {
+		const result = await this.userService.createUser(body);
+		if (!result) {
+			return next(new HttpError(422, 'User is exists'));
+		}
+
+		this.ok(res, { email: result.email });
 	}
 }
