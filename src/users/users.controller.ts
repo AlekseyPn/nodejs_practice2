@@ -10,10 +10,17 @@ import { UserLoginDto } from './dto/user-login.dto';
 import { UserRegisterDto } from './dto/user-register.dto';
 import { IUsersService } from './user.service.interface';
 import { ValidateMiddleware } from '../common/validate.middleware';
+import { User } from './user.entity';
+import { sign } from 'jsonwebtoken';
+import { IConfigService } from '../config/config.service.interface';
 
 @injectable()
 export class UsersController extends BaseController implements IUserController {
-	constructor(@inject(TYPES.ILoggerService) private loggerService: ILoggerService, @inject(TYPES.IUsersService) private userService: IUsersService) {
+	constructor(
+		@inject(TYPES.ILoggerService) private loggerService: ILoggerService,
+		@inject(TYPES.IUsersService) private userService: IUsersService,
+		@inject(TYPES.IConfigService) private configService: IConfigService,
+	) {
 		super(loggerService);
 		this.bindRoutes([
 			{
@@ -28,6 +35,12 @@ export class UsersController extends BaseController implements IUserController {
 				func: this.register,
 				middlewares: [new ValidateMiddleware(UserRegisterDto)],
 			},
+			{
+				path: '/info',
+				method: 'get',
+				func: this.info,
+				middlewares: [],
+			},
 		]);
 	}
 
@@ -36,7 +49,8 @@ export class UsersController extends BaseController implements IUserController {
 		if (!isValidUser) {
 			return next(new HttpError(401, 'Authorize error', 'login'));
 		}
-		this.ok(res, {});
+		const jwt = await this.singJWT(req.body.email, this.configService.get('SECRET'));
+		this.ok(res, { jwt });
 	}
 
 	public async register({ body }: Request<{}, {}, UserRegisterDto>, res: Response, next: NextFunction): Promise<void> {
@@ -46,5 +60,31 @@ export class UsersController extends BaseController implements IUserController {
 		}
 
 		this.ok(res, { email: result.email, id: result.id });
+	}
+
+	public async info({ user }: Request<{}, {}, UserRegisterDto>, res: Response, next: NextFunction): Promise<void> {
+		this.ok(res, { email: user });
+	}
+
+	private singJWT(email: User['email'], secret: string): Promise<string> {
+		return new Promise<string>((resolve, reject) => {
+			sign(
+				{
+					email,
+					iat: Math.floor(Date.now() / 1000),
+				},
+				secret,
+				{
+					algorithm: 'HS256',
+				},
+				(err, token) => {
+					if (err) {
+						reject(err);
+					}
+
+					resolve(<string>token);
+				},
+			);
+		});
 	}
 }
